@@ -25,6 +25,9 @@ The demo shows the same UI with two behaviour sets. **Current state** reproduces
 findings; **Concept** applies the rule. Every click is narrated with the observation it
 reproduces or the rule it obeys. The UI is in German, as in the product.
 
+The demo's source is in [`demo/`](demo): Next.js and shadcn/ui, generated with v0 and
+edited by hand. All products, customers, orders and numbers in it are made up.
+
 ## Contents
 
 - [The task](#the-task)
