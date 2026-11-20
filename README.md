@@ -23,14 +23,14 @@ the user is; every other layer reflects it.
 
 The demo shows the same UI with two behaviour sets. **Current state** reproduces the
 findings; **Concept** applies the rule. Every click is narrated with the observation it
-reproduces or the rule it obeys. The UI is in German, as in the product.
+reproduces or the rule it obeys. The UI is in German.
 
 The demo's source is in [`demo/`](demo): Next.js and shadcn/ui, generated with v0 and
 edited by hand. All products, customers, orders and numbers in it are made up.
 
 ## Contents
 
-- [The task](#the-task)
+- [What's in it](#whats-in-it)
 - [How I approached it](#how-i-approached-it)
 - [Part 1 · Navigation](#part-1--navigation): 12 observations, choosing the problem, one source of truth, two models
 - [Part 2 · Testing an AI assistant in the work screen](#part-2--testing-an-ai-assistant-in-the-work-screen)
@@ -38,19 +38,18 @@ edited by hand. All products, customers, orders and numbers in it are made up.
 - [The same analysis on any screen: a five-step playbook](#the-same-analysis-on-any-screen-a-five-step-playbook)
 - [Appendix: all 12 observations](#appendix-all-12-observations)
 
-## The task
+## What's in it
 
 Three parts:
 
-1. **Design analysis.** Review the navigation of a cloud ERP prototype, find what gets
-   in the way, pick one problem and propose a solution.
+1. **Design analysis.** The navigation of a cloud ERP prototype: what gets in the way,
+   which problem to solve first, and a solution.
 2. **User testing.** The work screen has an AI assistant next to the person's own
-   conversation. Plan a test: do users understand where to talk about what?
-3. **Documentation.** However the assistant pattern turns out, how would you document it
-   so designers and frontend developers can reproduce it in other apps?
+   conversation. A test plan: do users understand where to talk about what?
+3. **Documentation.** However the assistant pattern turns out, how to document it so
+   designers and frontend developers can reproduce it in other apps.
 
-The interactive demo was built afterwards, to show Part 1 as behaviour rather than as
-pictures.
+The interactive demo shows Part 1 as behaviour rather than as pictures.
 
 ## How I approached it
 
@@ -287,7 +286,7 @@ places.*
 
 ## Part 3 · Documenting an AI agent so other teams can reuse it
 
-**The task:** however the assistant pattern turns out, how would I document it so
+**The question:** however the assistant pattern turns out, how would I document it so
 designers and frontend developers can reproduce it in other apps?
 
 **My starting position:** the hard part isn't the components. An assistant is a few
