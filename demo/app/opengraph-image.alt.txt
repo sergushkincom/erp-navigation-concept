@@ -1,0 +1,1 @@
+ERP navigation concept: six navigation layers, one rule. The active tab is the only source of truth; the sidebar follows it.

@@ -78,7 +78,9 @@ function withInnerSidebarRule(prev: NavState, next: NavState): NavState {
   const nextMod = next.activeTabId ? moduleOf(next.activeTabId) : null
   const wasShown = !!prevMod && hasInnerSidebar(prevMod)
   const isShown = !!nextMod && hasInnerSidebar(nextMod)
-  if (wasShown && !isShown && nextMod) {
+  // In Current state an observation is the more useful thing to say, so it keeps the line.
+  const observationAlreadyNarrated = next.mode === 'current' && /\(observation/.test(next.narration)
+  if (wasShown && !isShown && nextMod && !observationAlreadyNarrated) {
     return {
       ...next,
       narration: `${nextMod.label} has no views or records — the inner sidebar is not shown here (rule 5).`,

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { MODULES, moduleOf, type Mode } from '@/lib/erp/modules'
 import { cn } from '@/lib/utils'
+import { useSlidingIndicator } from './use-sliding-indicator'
 
 type IconType = React.ComponentType<{ className?: string }>
 
@@ -78,6 +79,7 @@ export function Sidebar({
   onClickItem,
 }: Props) {
   const showCollapseControl = mode === 'current'
+  const { ref: navRef, box } = useSlidingIndicator<HTMLElement>([highlighted, expanded.join(','), mode, collapsed])
   const isCollapsed = showCollapseControl && collapsed
 
   /* ---------------------------------------------------------------- */
@@ -132,7 +134,16 @@ export function Sidebar({
   /* Expanded sidebar                                                  */
   /* ---------------------------------------------------------------- */
   return (
-    <nav aria-label="Module" className="relative flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+    <nav ref={navRef} aria-label="Module" className="relative flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+      {/* One highlight that slides to the highlighted row. In Concept it follows the active tab; in
+          Current state it stays where the sidebar last was, which is observation 7. */}
+      {box && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-0 z-0 rounded-md bg-sidebar-primary motion-safe:transition-[transform,width,height] motion-safe:duration-300 motion-safe:ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+          style={{ transform: `translate(${box.left}px, ${box.top}px)`, width: box.width, height: box.height }}
+        />
+      )}
       {/* Search field */}
       <div className="flex items-center gap-2 px-4 pb-1 pt-4">
         <label className="flex h-9 flex-1 items-center gap-2 rounded-lg px-2 text-sm text-muted-foreground">
@@ -157,7 +168,7 @@ export function Sidebar({
         </button>
       )}
 
-      <ul className="flex flex-col gap-0.5 p-2">
+      <ul className="relative z-10 flex flex-col gap-0.5 p-2">
         {MODULES.map((mod) => {
           const Icon = ICONS[mod.id]
           const isOpen = expanded.includes(mod.id)
@@ -171,10 +182,11 @@ export function Sidebar({
           return (
             <li key={mod.id} className="flex flex-col gap-0.5">
               <div
+                data-indicator-target={isHighlighted ? '' : undefined}
                 className={cn(
-                  'group flex h-9 items-center rounded-md text-sm font-medium',
+                  'group relative z-10 flex h-9 items-center rounded-md text-sm font-medium transition-colors',
                   isHighlighted
-                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                    ? 'text-sidebar-primary-foreground'
                     : 'text-sidebar-foreground hover:bg-sidebar-accent',
                 )}
               >
@@ -240,10 +252,11 @@ export function Sidebar({
                           type="button"
                           onClick={() => onClickItem(child.id)}
                           aria-current={active ? 'page' : undefined}
+                          data-indicator-target={active ? '' : undefined}
                           className={cn(
-                            'flex h-9 w-full items-center rounded-md px-3 text-left text-[13px] font-normal',
+                            'relative z-10 flex h-9 w-full items-center rounded-md px-3 text-left text-[13px] font-normal transition-colors',
                             active
-                              ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                              ? 'text-sidebar-primary-foreground'
                               : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
                           )}
                         >

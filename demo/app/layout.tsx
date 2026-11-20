@@ -3,9 +3,15 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'ERP Navigation Prototype',
-  description: 'Compares today’s sidebar/tab behaviour with a one-source-of-truth concept.',
-  generator: 'v0.app',
+  metadataBase: new URL('https://erp-navigation-concept.vercel.app'),
+  title: 'ERP navigation concept',
+  description: 'Six navigation layers, one rule: the active tab is the only source of truth. Compare today’s behaviour with the concept.',
+  openGraph: {
+    title: 'ERP navigation concept',
+    description: 'Six navigation layers, one rule: the active tab is the only source of truth.',
+    type: 'website',
+  },
+  twitter: { card: 'summary_large_image', title: 'ERP navigation concept' },
   icons: {
     icon: [
       {

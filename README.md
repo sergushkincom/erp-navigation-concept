@@ -1,32 +1,57 @@
-[![Live](https://img.shields.io/badge/Live-demo-0E8A16)](https://erp-navigation-concept.vercel.app/)
+<div align="center">
 
 # ERP navigation concept
 
-*A concept for navigation in a cloud ERP.*
+**Six navigation layers on one screen. One rule to make them agree.**
 
-**The question:** six navigation layers share one screen of a cloud ERP. Two of them
-answer *where am I* on their own, and sometimes they disagree. What is the smallest
-change that makes the screen tell one story?
+*The active tab is the only thing that defines where you are. Every other layer reflects it.*
 
-**The answer, in one sentence:** the active tab is the only thing that defines where
-the user is; every other layer reflects it.
+[![Live demo](https://img.shields.io/badge/Live_demo-erp--navigation--concept-2563EB?style=for-the-badge)](https://erp-navigation-concept.vercel.app/)
 
-[Live demo →](https://erp-navigation-concept.vercel.app/)
+![12 observations](https://img.shields.io/badge/observations-12-D97706)
+![5 rules](https://img.shields.io/badge/rules-5-15803D)
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
+![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-components-111111)
 
-![Current state: the Dashboard tab is active, but the sidebar still highlights Artikel → Artikelverwaltung](docs/current-state.png)
+<br>
 
-*Current state — the Dashboard tab is active, the sidebar still says Artikelverwaltung. Two layers, two answers.*
+<img src="docs/demo.webp" width="900" alt="Demo, 13 s loop: the same clicks twice. In Current state the Dashboard tab becomes active but the sidebar highlight stays on Artikelverwaltung, flagged as Observation 7. In Concept the highlight slides to Dashboard and the second tab is labelled by its content.">
 
-![Concept: the same step, and the sidebar now follows the active tab and highlights Dashboard](docs/concept.png)
+<sub>The same three clicks, twice. <b>Current state:</b> the highlight stays behind. <b>Concept:</b> it follows the tab.</sub>
 
-*Concept — the same clicks. The sidebar follows the active tab, and the second tab says what it holds.*
+</div>
 
-The demo shows the same UI with two behaviour sets. **Current state** reproduces the
-findings; **Concept** applies the rule. Every click is narrated with the observation it
-reproduces or the rule it obeys. The UI is in German.
+---
+
+**The question:** six navigation layers share one screen of a cloud ERP. Two of them,
+the sidebar and the tab bar, answer *where am I* on their own, and sometimes they
+disagree. What is the smallest change that makes the screen tell one story?
+
+## Before and after
+
+<table>
+<tr>
+<th width="50%">Current state</th>
+<th width="50%">Concept</th>
+</tr>
+<tr>
+<td><img src="docs/current-state.png" alt="Current state: the Dashboard tab is active, but the sidebar still highlights Artikel and Artikelverwaltung"></td>
+<td><img src="docs/concept.png" alt="Concept: the same step; the sidebar follows the active tab and highlights Dashboard"></td>
+</tr>
+<tr>
+<td>The Dashboard tab is active; the sidebar still says Artikelverwaltung. Two layers, two answers.</td>
+<td>The same clicks. The sidebar follows the active tab, and the second tab says what it holds.</td>
+</tr>
+</table>
+
+**Try it:** the [live demo](https://erp-navigation-concept.vercel.app/) has a switch in
+the top right between **Current state** and **Concept**. Every click is narrated:
+an amber <kbd>Observation</kbd> badge when today's behaviour reproduces a finding, a
+green <kbd>Rule</kbd> badge when the concept applies one. The UI is in German.
 
 The demo's source is in [`demo/`](demo): Next.js and shadcn/ui, generated with v0 and
-edited by hand. All products, customers, orders and numbers in it are made up.
+edited by hand. All products, customers, orders and numbers in it are made up. Motion
+respects `prefers-reduced-motion`.
 
 ## Contents
 

@@ -5,6 +5,7 @@ import { highlightedItem, initialNavState, navReducer } from '@/lib/erp/navigati
 import { ContentView } from './content-view'
 import { InnerSidebar } from './inner-sidebar'
 import { ModeSwitcher } from './mode-switcher'
+import { Narration } from './narration'
 import { Sidebar } from './sidebar'
 import { TabBar } from './tab-bar'
 
@@ -24,13 +25,7 @@ export function ErpPrototype() {
         <ModeSwitcher mode={state.mode} onChange={(mode) => dispatch({ type: 'setMode', mode })} />
       </header>
 
-      <p
-        role="status"
-        aria-live="polite"
-        className="shrink-0 border-b border-border bg-background px-4 py-2 text-[13px] text-muted-foreground"
-      >
-        {state.narration}
-      </p>
+      <Narration text={state.narration} mode={state.mode} />
 
       <div className="flex min-h-0 flex-1">
         <Sidebar
