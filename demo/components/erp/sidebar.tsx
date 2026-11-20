@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { MODULES, moduleOf, type Mode } from '@/lib/erp/modules'
 import { cn } from '@/lib/utils'
+import { DisagreementMarker, TAB_SIDEBAR_DISAGREEMENT_LABEL } from './disagreement-marker'
 import { useSlidingIndicator } from './use-sliding-indicator'
 
 type IconType = React.ComponentType<{ className?: string }>
@@ -62,6 +63,8 @@ type Props = {
   expanded: string[]
   highlighted: string | null
   collapsed: boolean
+  /** Current state only. Ignored in Concept, where the tab is the source of truth. */
+  disagree: boolean
   onToggleCollapse: () => void
   onClickModule: (moduleId: string) => void
   onClickChevron: (moduleId: string) => void
@@ -73,12 +76,14 @@ export function Sidebar({
   expanded,
   highlighted,
   collapsed,
+  disagree,
   onToggleCollapse,
   onClickModule,
   onClickChevron,
   onClickItem,
 }: Props) {
   const showCollapseControl = mode === 'current'
+  const showDisagreement = mode === 'current' && disagree
   const { ref: navRef, box } = useSlidingIndicator<HTMLElement>([highlighted, expanded.join(','), mode, collapsed])
   const isCollapsed = showCollapseControl && collapsed
 
@@ -105,22 +110,25 @@ export function Sidebar({
           {RAIL.map((entry) => {
             const Icon = entry.icon
             const active = entry.moduleId != null && entry.moduleId === highlightedModuleId
+            const marked = active && showDisagreement
+            const accessibleLabel = marked ? `${entry.label}. ${TAB_SIDEBAR_DISAGREEMENT_LABEL}` : entry.label
             return (
               <li key={entry.id}>
                 <button
                   type="button"
-                  title={entry.label}
-                  aria-label={entry.label}
+                  title={accessibleLabel}
+                  aria-label={accessibleLabel}
                   aria-current={active ? 'page' : undefined}
                   onClick={entry.moduleId ? () => onClickModule(entry.moduleId!) : undefined}
                   className={cn(
-                    'flex size-10 items-center justify-center rounded-xl',
+                    'relative flex size-10 items-center justify-center rounded-xl',
                     active
                       ? 'bg-sidebar-primary text-sidebar-primary-foreground'
                       : 'text-sidebar-foreground hover:bg-sidebar-accent',
                   )}
                 >
                   <Icon className="size-[18px]" />
+                  {marked && <DisagreementMarker className="absolute top-1 right-1" />}
                 </button>
               </li>
             )
@@ -177,6 +185,7 @@ export function Sidebar({
           // The module row carries the highlight unless a visible sub-module does. Saved views and
           // records live in the inner sidebar, so their module is what lights up here.
           const isHighlighted = ownsHighlight && !visibleChildHighlighted
+          const marked = isHighlighted && showDisagreement
           const Chevron = isOpen ? ChevronDown : ChevronRight
 
           return (
@@ -194,10 +203,12 @@ export function Sidebar({
                   type="button"
                   onClick={() => onClickModule(mod.id)}
                   aria-current={isHighlighted ? 'page' : undefined}
+                  title={marked ? TAB_SIDEBAR_DISAGREEMENT_LABEL : undefined}
                   className="flex h-full min-w-0 flex-1 items-center gap-2.5 pl-3 pr-2 text-left"
                 >
                   <Icon className="size-4 shrink-0" />
-                  <span className="truncate">{mod.label}</span>
+                  <span className="min-w-0 flex-1 truncate">{mod.label}</span>
+                  {marked && <DisagreementMarker />}
                 </button>
 
                 {mod.children &&
@@ -231,6 +242,7 @@ export function Sidebar({
                 <ul className="ml-3 flex flex-col gap-0.5 border-l border-sidebar-border pl-2">
                   {mod.children.map((child) => {
                     const active = highlighted === child.id
+                    const marked = active && showDisagreement
                     // Prototype limitation (both modes): unwired sub-items are inert — no tab, no narration.
                     if (child.disabled) {
                       return (
@@ -252,15 +264,17 @@ export function Sidebar({
                           type="button"
                           onClick={() => onClickItem(child.id)}
                           aria-current={active ? 'page' : undefined}
+                          title={marked ? TAB_SIDEBAR_DISAGREEMENT_LABEL : undefined}
                           data-indicator-target={active ? '' : undefined}
                           className={cn(
-                            'relative z-10 flex h-9 w-full items-center rounded-md px-3 text-left text-[13px] font-normal transition-colors',
+                            'relative z-10 flex h-9 w-full items-center gap-2 rounded-md px-3 text-left text-[13px] font-normal transition-colors',
                             active
                               ? 'text-sidebar-primary-foreground'
                               : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
                           )}
                         >
-                          <span className="truncate">{child.label}</span>
+                          <span className="min-w-0 flex-1 truncate">{child.label}</span>
+                          {marked && <DisagreementMarker />}
                         </button>
                       </li>
                     )

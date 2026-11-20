@@ -46,6 +46,23 @@ export function highlightedItem(state: NavState): string | null {
   return state.mode === 'current' ? state.lastClicked : state.activeTabId
 }
 
+/**
+ * Current state keeps two answers to "where am I?": the last sidebar selection and the
+ * active tab. They point at different places when the selection is neither the active tab
+ * nor the module that owns it — clicking a module highlights that module while the tab it
+ * just activated stays open, and that is still the same place.
+ * Concept mode never disagrees: the active tab is the only source of truth, so the
+ * marker must not appear there.
+ */
+export function tabAndSidebarDisagree(state: NavState): boolean {
+  if (state.mode !== 'current') return false
+  const tabId = state.activeTabId
+  const selected = state.lastClicked
+  if (!tabId || !selected) return false
+  if (selected === tabId) return false
+  return selected !== moduleOf(tabId).id
+}
+
 const toggle = (list: string[], id: string) =>
   list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 

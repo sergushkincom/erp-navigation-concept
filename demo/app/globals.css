@@ -181,3 +181,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* The disagreement dot fades in. Reduced motion skips the animation and shows it at full opacity. */
+@media (prefers-reduced-motion: no-preference) {
+  .disagreement-marker {
+    animation: disagreement-marker-in 500ms ease-out;
+  }
+}
+
+@keyframes disagreement-marker-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

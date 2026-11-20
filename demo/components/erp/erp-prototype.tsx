@@ -1,7 +1,7 @@
 'use client'
 
 import { useReducer } from 'react'
-import { highlightedItem, initialNavState, navReducer } from '@/lib/erp/navigation'
+import { highlightedItem, initialNavState, navReducer, tabAndSidebarDisagree } from '@/lib/erp/navigation'
 import { ContentView } from './content-view'
 import { InnerSidebar } from './inner-sidebar'
 import { ModeSwitcher } from './mode-switcher'
@@ -11,6 +11,7 @@ import { TabBar } from './tab-bar'
 
 export function ErpPrototype() {
   const [state, dispatch] = useReducer(navReducer, initialNavState)
+  const disagree = tabAndSidebarDisagree(state)
 
   return (
     <div className="flex h-dvh flex-col bg-background text-foreground">
@@ -33,6 +34,7 @@ export function ErpPrototype() {
           expanded={state.expanded}
           highlighted={highlightedItem(state)}
           collapsed={state.sidebarCollapsed}
+          disagree={disagree}
           onToggleCollapse={() => dispatch({ type: 'toggleSidebar' })}
           onClickModule={(moduleId) => dispatch({ type: 'clickModule', moduleId })}
           onClickChevron={(moduleId) => dispatch({ type: 'clickChevron', moduleId })}
@@ -49,6 +51,7 @@ export function ErpPrototype() {
             mode={state.mode}
             tabs={state.tabs}
             activeTabId={state.activeTabId}
+            disagree={disagree}
             onActivate={(tabId) => dispatch({ type: 'activateTab', tabId })}
             onClose={(tabId) => dispatch({ type: 'closeTab', tabId })}
           />
