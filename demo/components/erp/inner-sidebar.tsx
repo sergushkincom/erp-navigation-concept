@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Ellipsis, FileText, List, Plus, Search } from 'lucide-react'
 import { hasInnerSidebar, moduleOf, type Mode, type NavModule } from '@/lib/erp/modules'
 import { cn } from '@/lib/utils'
@@ -14,21 +15,41 @@ type Props = {
 
 export function InnerSidebar({ mode, activeTabId, highlighted, onClickItem }: Props) {
   const mod: NavModule | null = activeTabId ? moduleOf(activeTabId) : null
+  const live = mod && hasInnerSidebar(mod) ? mod : null
+  // Keep the last module on screen while the column eases shut, so the close clips
+  // real rows instead of an empty slot. Same column in both modes.
+  const [painted, setPainted] = useState(live)
+  if (live && painted?.id !== live.id) setPainted(live)
+  const open = live !== null
 
-  // Rule 5: no column at all when the module has neither views nor records.
-  if (!mod || !hasInnerSidebar(mod)) return null
-
-  // The inner sidebar is identical in both modes: two visually distinct groups —
-  // saved views (a filter over many items) and open records (single items).
+  // Rule 5: modules without views or records have no column. The width eases a
+  // little longer than the highlight, because the column travels further, so you
+  // can see it follow the active tab. Reduced motion snaps it.
+  // The lists themselves are identical in both modes: saved views (a filter over many
+  // items) and open records (single items), kept visually distinct.
   return (
-    <aside
-      aria-label={`Inhalte in ${mod.label}`}
-      className="flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar"
+    <div
+      aria-hidden={open ? undefined : true}
+      inert={open ? undefined : true}
+      className={cn(
+        'flex min-h-0 min-w-0 shrink-0 overflow-hidden motion-safe:transition-[width] motion-safe:duration-500 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]',
+        open ? 'w-64' : 'w-0',
+      )}
     >
-      {
-        <div className="flex flex-col gap-5 px-3 pt-5">
+      {painted && (
+        <aside
+          aria-label={`Inhalte in ${painted.label}`}
+          className="flex w-64 flex-col border-r border-sidebar-border bg-sidebar"
+        >
+          <div
+            className={cn(
+              'flex flex-col gap-5 px-3 pt-5',
+              'motion-safe:transition-opacity motion-safe:duration-150 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]',
+              open ? 'motion-safe:opacity-100 motion-safe:delay-100' : 'motion-safe:opacity-0',
+            )}
+          >
           {/* ---------------- Übersichten: saved views (a filter over many items) ---------------- */}
-          {mod.views && mod.views.length > 0 && (
+          {painted.views && painted.views.length > 0 && (
             <section className="flex flex-col gap-1">
               <header className="flex h-7 items-center justify-between pl-2 pr-1">
                 <h2 className="text-[13px] text-muted-foreground">Übersichten</h2>
@@ -45,7 +66,7 @@ export function InnerSidebar({ mode, activeTabId, highlighted, onClickItem }: Pr
                 </div>
               </header>
               <ul className="flex flex-col gap-0.5">
-                {mod.views.map((view) => {
+                {painted.views.map((view) => {
                   const active = highlighted === view.id
                   return (
                     <li key={view.id}>
@@ -71,10 +92,10 @@ export function InnerSidebar({ mode, activeTabId, highlighted, onClickItem }: Pr
           )}
 
           {/* ---------------- Records: single open items ---------------- */}
-          {mod.records && mod.records.length > 0 && (
+          {painted.records && painted.records.length > 0 && (
             <section className="flex flex-col gap-2">
               <header className="flex h-7 items-center justify-between pl-2 pr-1">
-                <h2 className="text-[13px] text-muted-foreground">{mod.label}</h2>
+                <h2 className="text-[13px] text-muted-foreground">{painted.label}</h2>
                 <div className="flex items-center gap-0.5 text-muted-foreground">
                   <span aria-hidden="true" className="flex size-6 items-center justify-center text-primary">
                     <Search className="size-4" />
@@ -91,12 +112,12 @@ export function InnerSidebar({ mode, activeTabId, highlighted, onClickItem }: Pr
                 <Search className="size-4 shrink-0" aria-hidden="true" />
                 <input
                   type="search"
-                  placeholder={`Suche ${mod.label}`}
+                  placeholder={`Suche ${painted.label}`}
                   className="min-w-0 flex-1 bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
                 />
               </label>
               <ul className="flex flex-col gap-0.5">
-                {mod.records.map((record) => {
+                {painted.records.map((record) => {
                   const active = highlighted === record.id
                   return (
                     <li key={record.id}>
@@ -120,8 +141,9 @@ export function InnerSidebar({ mode, activeTabId, highlighted, onClickItem }: Pr
               </ul>
             </section>
           )}
-        </div>
-      }
-    </aside>
+          </div>
+        </aside>
+      )}
+    </div>
   )
 }
