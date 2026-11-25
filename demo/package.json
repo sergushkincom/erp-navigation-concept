@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test lib/erp/navigation.test.ts"
+    "test": "tsx --test lib/erp/navigation.test.ts lib/erp/tab-slots.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -15,6 +15,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.16.0",
+    "motion": "^14.14.0",
     "next": "16.4.6",
     "react": "^19",
     "react-dom": "^19",
